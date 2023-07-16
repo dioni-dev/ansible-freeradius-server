@@ -1,0 +1,11 @@
+kill_weblogin {
+    if (&CHAP-Password || &User-Password) {
+        if ({% for realm in eduroam.realm %}&User-Name =~ /@{{ realm }}/ || {% endfor %}false) {
+        } else {
+   	    update request {
+	       Module-Failure-Message = "CHAP-Password nor User-Password allowed for %{User-Name}"
+            }
+	    reject
+        }
+    }
+}

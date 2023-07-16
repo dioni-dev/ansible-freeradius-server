@@ -1,0 +1,17 @@
+---
+- name: restart freeradius
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: "{{ fr_service_name }}.service"
+
+- name: restart samba
+  notify: restart samba2
+  command: systemctl stop winbind.service
+
+- name: restart samba2
+  notify: restart samba3
+  command: systemctl restart smbd
+
+- name: restart samba3
+  command: systemctl start winbind.service
